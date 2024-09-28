@@ -22,10 +22,10 @@ jobs:
             ~/work/_temp/_github_home/.cargo/registry
             ~/work/_temp/_github_home/.cargo/git
             target
-          key: ${{ github.job }}-${{ hashFiles('rust-toolchain') }}-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ github.job }}-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
-            ${{ github.job }}-${{ hashFiles('rust-toolchain') }}-${{ hashFiles('**/Cargo.lock') }}
-            ${{ github.job }}-${{ hashFiles('rust-toolchain') }}-
+            ${{ github.job }}-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('**/Cargo.lock') }}
+            ${{ github.job }}-${{ hashFiles('rust-toolchain.toml') }}-
 
       - name: Build
         uses: ./ci/github-actions/arch-run
