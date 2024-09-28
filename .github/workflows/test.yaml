@@ -62,6 +62,7 @@ jobs:
           components: rustfmt
           override: 'true'
           default: 'true'
+          toolchain: 'rust-toolchain.toml'
 
       - name: Check code formatting
         run: cargo fmt -- --check
