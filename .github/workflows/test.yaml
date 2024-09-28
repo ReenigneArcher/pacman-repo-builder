@@ -56,13 +56,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
           components: rustfmt
-          override: 'true'
-          default: 'true'
-          toolchain: 'rust-toolchain.toml'
 
       - name: Check code formatting
         run: cargo fmt -- --check
