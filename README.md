@@ -14,7 +14,7 @@ Build a custom pacman repository from a collection of PKGBUILD directories.
 
 ## Usage
 
-**⚠ WARNING:** This program is meant to be used within a docker container.
+`makepkg` does not allow running as root. You should ensure you have a non-root user to run this program.
 
 ### Manifest file
 
@@ -117,14 +117,6 @@ build-pacman-repo print-config \
 
 _Note:_ Replace `$repo_dir` with path of your repository directory. This directory would contains all built packages.
 _Note:_ Replace `$repo_name` with name of your repository file. This file would be fetched by `pacman` to check for updates.
-
-### Replace `/usr/bin/makepkg` with one that allows running as root
-
-The normal `makepkg` script does not allow running as root. While it may make sense in a user's machine, it inconveniences a Docker container.
-
-```sh
-build-pacman-repo patch-makepkg --replace
-```
 
 ### Build a pacman repositories
 
