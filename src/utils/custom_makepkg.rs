@@ -20,7 +20,7 @@ impl MakepkgPatch {
     }
 }
 
-pub const MAKEPKG_PATCHES: [MakepkgPatch; 5] = [
+pub const MAKEPKG_PATCHES: [MakepkgPatch; 6] = [
     MakepkgPatch {
         custom_content: include_str!("./patches/makepkg5"),
         custom_sha1sum: hex!("4ca18588b27b7e10b2329fb4e636ab33208a9915"),
@@ -45,6 +45,11 @@ pub const MAKEPKG_PATCHES: [MakepkgPatch; 5] = [
         custom_content: include_str!("./patches/makepkg6"),
         custom_sha1sum: hex!("8fd61bf5635ec3a64b623272c212430496ade15f"),
         original_sha1sum: hex!("b91192d0c4d06643e376a04e5fb85335877550e3"),
+    },
+    MakepkgPatch {
+        custom_content: include_str!("./patches/makepkg7"),
+        custom_sha1sum: hex!("b747ca08e30299788c39a084436cba78b42f1f4e"),
+        original_sha1sum: hex!("7df79b2a25c23fd9fe3040b8eb855a518c0b0a31"),
     },
 ];
 
