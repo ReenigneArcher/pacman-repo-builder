@@ -1,7 +1,7 @@
 use super::super::{
     args::{Args, Command},
     cmd::{
-        build, copyright, deref_db, init_aur_builder, outdated, patch_makepkg, print_config, sort,
+        build, copyright, deref_db, init_aur_builder, outdated, print_config, sort,
         sync_srcinfo,
     },
     status::Status,
