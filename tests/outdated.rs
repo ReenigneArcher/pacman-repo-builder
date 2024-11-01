@@ -14,7 +14,13 @@ fn work_dir(branch: &'static str) -> PathBuf {
 }
 
 fn setup_test_files(branch: &'static str) {
-    let base_dir = work_dir(branch);
+    let base_dir = ROOT
+        .pipe(PathBuf::from)
+        .join("tests")
+        .join("fixtures")
+        .join("outdated")
+        .join("__template__")
+        .join("repo");
     let files = vec![
         "out-of-date-by-arch-1.2.3-1-i686.pkg.tar.zst",
         "out-of-date-by-arch-1.2.3-1-x86_64.pkg.tar.zst",
