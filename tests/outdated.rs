@@ -1,6 +1,6 @@
 use command_extra::CommandExtra;
 use pipe_trait::*;
-use std::{path::PathBuf, process::Command};
+use std::{fs, path::PathBuf, process::Command};
 
 const EXE: &str = env!("CARGO_BIN_EXE_build-pacman-repo");
 const ROOT: &str = env!("CARGO_MANIFEST_DIR");
@@ -13,7 +13,39 @@ fn work_dir(branch: &'static str) -> PathBuf {
         .join(branch)
 }
 
+fn setup_test_files(branch: &'static str) {
+    let base_dir = work_dir(branch);
+    let files = vec![
+        "out-of-date-by-arch-1.2.3-1-i686.pkg.tar.zst",
+        "out-of-date-by-arch-1.2.3-1-x86_64.pkg.tar.zst",
+        "out-of-date-by-epoch-1.2.3-1-any.pkg.tar.zst",
+        "out-of-date-by-epoch-1:-1.2.3-1-any.pkg.tar.zst",
+        "out-of-date-by-epoch-2:-1.2.3-1-any.pkg.tar.zst",
+        "out-of-date-by-pkgrel-0.0.0-1.pkg.tar.zst",
+        "out-of-date-by-pkgrel-0.0.1-1.pkg.tar.zst",
+        "out-of-date-by-pkgrel-0.1.0-1.pkg.tar.zst",
+        "out-of-date-by-pkgrel-1.0.0-1.pkg.tar.zst",
+        "out-of-date-by-pkgrel-1.2.3-1.pkg.tar.zst",
+        "out-of-date-by-pkgrel-1.2.3-2.pkg.tar.zst",
+        "repo.db",
+        "up-to-date-pkgbuild-1.2.3-1-any.pkg.tar.zst",
+        "up-to-date-srcinfo-1.2.3-1-any.pkg.tar.zst",
+    ];
+
+    // Create the base directory if it doesn't exist
+    if !base_dir.exists() {
+        fs::create_dir_all(&base_dir).expect("Failed to create base directory");
+    }
+
+    // Create the files
+    for file in files {
+        let file_path = base_dir.join(file);
+        fs::File::create(file_path).expect("Failed to create file");
+    }
+}
+
 fn init(branch: &'static str) -> Command {
+    setup_test_files(branch);
     Command::new(EXE)
         .with_current_dir(work_dir(branch))
         .with_arg("outdated")
