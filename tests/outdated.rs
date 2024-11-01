@@ -13,7 +13,7 @@ fn work_dir(branch: &'static str) -> PathBuf {
         .join(branch)
 }
 
-fn setup_test_files(branch: &'static str) {
+fn setup_test_files() {
     let base_dir = ROOT
         .pipe(PathBuf::from)
         .join("tests")
@@ -51,7 +51,7 @@ fn setup_test_files(branch: &'static str) {
 }
 
 fn init(branch: &'static str) -> Command {
-    setup_test_files(branch);
+    setup_test_files();
     Command::new(EXE)
         .with_current_dir(work_dir(branch))
         .with_arg("outdated")
