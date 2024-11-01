@@ -31,7 +31,7 @@ name = "build-pacman-repo"
 path = "src/main.rs"
 
 [dependencies]
-argh = "^0.1.4"
+argh = "^0.1.12"
 pipe-trait = "^0.4.0"
 smart-default = "^0.7.1"
 serde_yaml = "^0.9.34"
