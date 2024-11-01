@@ -1,14 +1,20 @@
-from archlinux:base-devel
+FROM archlinux:base-devel
 
-copy pacman.conf /etc/pacman.conf
+COPY pacman.conf /etc/pacman.conf
 
-run pacman -Syu --noconfirm
-run pacman -S --noconfirm --needed --overwrite '*' bash rustup gcc llvm pkgconf
+RUN pacman -Syu --noconfirm
+RUN pacman -S --noconfirm --needed --overwrite '*' bash rustup gcc llvm pkgconf
 
-copy run.bash /run.bash
+COPY run.bash /run.bash
 
-# create builder user
-run useradd -m builder
-user builder
+# Setup builder user, arch prevents running makepkg as root
+RUN useradd -m builder
+RUN echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-entrypoint ["/run.bash"]
+# patch the build flags
+RUN sed -i 's,#MAKEFLAGS="-j2",MAKEFLAGS="-j$(nproc)",g' /etc/makepkg.conf
+
+# Setup builder user
+USER builder
+
+ENTRYPOINT ["/run.bash"]
