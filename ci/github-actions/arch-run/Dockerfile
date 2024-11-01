@@ -15,6 +15,9 @@ RUN echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 RUN mkdir -p /github/home/.rustup
 RUN chown -R builder:builder /github/home
 
+# Testing print makepkg contents
+RUN cat /usr/bin/makepkg
+
 # patch the build flags
 RUN sed -i 's,#MAKEFLAGS="-j2",MAKEFLAGS="-j$(nproc)",g' /etc/makepkg.conf
 
