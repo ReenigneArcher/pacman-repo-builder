@@ -1,0 +1,105 @@
+---
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  setup_release:
+    name: Setup Release
+    outputs:
+      publish_release: ${{ steps.setup_release.outputs.publish_release }}
+      release_body: ${{ steps.setup_release.outputs.release_body }}
+      release_commit: ${{ steps.setup_release.outputs.release_commit }}
+      release_generate_release_notes: ${{ steps.setup_release.outputs.release_generate_release_notes }}
+      release_tag: ${{ steps.setup_release.outputs.release_tag }}
+      release_version: ${{ steps.setup_release.outputs.release_version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Release
+        id: setup_release
+        uses: LizardByte/setup-release-action@v2024.919.143601
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: Build
+    needs: setup_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/work/_temp/_github_home/.cargo/registry
+            ~/work/_temp/_github_home/.cargo/git
+            target
+          key: ${{ github.job }}-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ github.job }}-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('**/Cargo.lock') }}
+            ${{ github.job }}-${{ hashFiles('rust-toolchain.toml') }}-
+
+      - name: Install toolchain
+        uses: ./ci/github-actions/arch-run
+        with:
+          command: rustup target add x86_64-unknown-linux-gnu
+
+      - name: Test
+        uses: ./ci/github-actions/arch-run
+        with:
+          command: cargo test
+
+      - name: Clippy
+        uses: ./ci/github-actions/arch-run
+        with:
+          command: cargo clippy -- -D warnings
+
+      - name: Build
+        uses: ./ci/github-actions/arch-run
+        with:
+          command: cargo build --target x86_64-unknown-linux-gnu --release
+
+      - name: Strip all debug symbols
+        uses: ./ci/github-actions/arch-run
+        with:
+          command: strip --strip-all target/x86_64-unknown-linux-gnu/release/build-pacman-repo
+
+      - name: Enable reading of cache
+        continue-on-error: true
+        uses: ./ci/github-actions/arch-run
+        with:
+          command: chmod -R a+rwX $HOME/.cargo target
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-pacman-repo-x86_64-unknown-linux-gnu
+          path: target/x86_64-unknown-linux-gnu/release/build-pacman-repo
+
+      - name: Create/Update GitHub Release
+        if: ${{ needs.setup_release.outputs.publish_release == 'true' }}
+        uses: LizardByte/create-release-action@v2024.919.143026
+        with:
+          allowUpdates: true
+          artifacts: 'target/x86_64-unknown-linux-gnu/release/build-pacman-repo'
+          body: ${{ needs.setup_release.outputs.release_body }}
+          generateReleaseNotes: ${{ needs.setup_release.outputs.release_generate_release_notes }}
+          name: ${{ needs.setup_release.outputs.release_tag }}
+          prerelease: true
+          tag: ${{ needs.setup_release.outputs.release_tag }}
+          token: ${{ secrets.GH_BOT_TOKEN }}

@@ -1,1 +1,1 @@
-pub const COPYING: &str = include_str!("../COPYING");
+pub const LICENSE: &str = include_str!("../LICENSE");

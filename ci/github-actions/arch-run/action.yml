@@ -1,3 +1,4 @@
+---
 name: Run command in Arch Linux environment
 inputs:
   command:

@@ -1,7 +1,8 @@
 # PacMan Repo Builder
 
-[![Test](https://github.com/KSXGitHub/pacman-repo-builder/workflows/Test/badge.svg)](https://github.com/KSXGitHub/pacman-repo-builder/actions?query=workflow%3ATest)
-[![Crates.io Version](https://img.shields.io/crates/v/pacman-repo-builder?logo=rust)](https://crates.io/crates/pacman-repo-builder)
+[![GitHub stars](https://img.shields.io/github/stars/lizardbyte/pacman-repo-builder.svg?logo=github&style=for-the-badge)](https://github.com/LizardByte/pacman-repo-builder)
+[![GitHub Releases](https://img.shields.io/github/downloads/lizardbyte/pacman-repo-builder/total.svg?style=for-the-badge&logo=github)](https://github.com/LizardByte/pacman-repo-builder/releases/latest)
+[![GitHub Workflow Status (CI)](https://img.shields.io/github/actions/workflow/status/lizardbyte/pacman-repo-builder/ci.yml.svg?branch=master&label=CI%20build&logo=github&style=for-the-badge)](https://github.com/LizardByte/pacman-repo-builder/actions/workflows/ci.yml?query=branch%3Amaster)
 
 Build a custom pacman repository from a collection of PKGBUILD directories.
 
@@ -103,7 +104,8 @@ _Shared Fields:_ Fields that exist in both `global-settings` and `member`. If `g
 
 ### Generate manifest file
 
-Listing every member in a manifest file can be a chore. So when there are no members with customized properties, you can generate the manifest file the reflect the build directories instead:
+Listing every member in a manifest file can be a chore. So when there are no members with customized properties, you
+can generate the manifest file to reflect the build directories instead:
 
 ```sh
 build-pacman-repo print-config \
@@ -115,12 +117,14 @@ build-pacman-repo print-config \
   > build-pacman-repo.yaml
 ```
 
-_Note:_ Replace `$repo_dir` with path of your repository directory. This directory would contains all built packages.
-_Note:_ Replace `$repo_name` with name of your repository file. This file would be fetched by `pacman` to check for updates.
+_Note:_ Replace `$repo_dir` with path of your repository directory. This directory will contain all built packages.
+_Note:_ Replace `$repo_name` with name of your repository file. This file will be fetched by `pacman` to check for
+updates.
 
 ### Replace `/usr/bin/makepkg` with one that allows running as root
 
-The normal `makepkg` script does not allow running as root. While it may make sense in a user's machine, it inconveniences a Docker container.
+The normal `makepkg` script does not allow running as root. While it may make sense in a user's machine,
+it inconveniences a Docker container.
 
 ```sh
 build-pacman-repo patch-makepkg --replace
@@ -152,37 +156,19 @@ build-pacman-repo help $command
 build-pacman-repo $command --help
 ```
 
-## GitHub Action
-
-[pacman-repo-builder/action](https://github.com/pacman-repo-builder/action) let you run `build-pacman-repo` on an Arch Linux container.
-
 ## Real-world applications
 
-* https://github.com/KSXGitHub/aur-packages-builder
-* https://github.com/KSXGitHub/cargo-scripts-builder
-* https://github.com/KSXGitHub/personal-pacman-packages
-* https://github.com/KSXGitHub/personal-crates
+* https://github.com/LizardByte/pacman-repo
 
 ## Frequently Asked Questions
 
 ### What does this program do?
 
-Its main purpose is to build a pacman repository. When the `build` command is called, it will read all source infos from either `.SRCINFO` or `PKGBUILD`, sort them by their dependency relationship, then build them one by one.
+The main purpose is to build a pacman repository. When the `build` command is called, it will read all source infos
+from either `.SRCINFO` or `PKGBUILD`, sort them by their dependency relationship, then build them one by one.
 
-### Why does this need to be ran inside a container?
+### Why does this need to be run inside a container?
 
 In order for this program to function properly, it must make several changes to the host system, such as:
 * Replace `/usr/bin/makepkg` with one that allows running as root, so that it may be used in a CI environment.
 * Install every built package just in case it may be depended upon by another package.
-
-### A simple shell script should be enough
-
-If your use case is simple, good for you, just use shell script. If you are confident that you can provide all the features with shell script alone, also good for you, but I have already provided them with this program, so you don't have to.
-
-### Why YAML?
-
-It is nice.
-
-## License
-
-[GPLv3](https://git.io/JTBVM) © [Hoàng Văn Khải](https://ksxgithub.github.io).

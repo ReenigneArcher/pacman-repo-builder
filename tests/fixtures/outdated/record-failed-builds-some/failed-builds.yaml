@@ -1,3 +1,4 @@
+---
 - pkgname: out-of-date-by-arch
   version: 1.2.3-1
   arch: arm

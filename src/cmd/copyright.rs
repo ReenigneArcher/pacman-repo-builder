@@ -1,7 +1,7 @@
-use super::super::{args::CopyrightArgs, status::Status, utils::COPYING};
+use super::super::{args::CopyrightArgs, status::Status, utils::LICENSE};
 
 pub fn copyright(args: CopyrightArgs) -> Status {
     let CopyrightArgs {} = args;
-    print!("{}", COPYING);
+    print!("{}", LICENSE);
     Ok(())
 }
