@@ -25,7 +25,7 @@ mod split_str_once;
 pub use alpm_wrapper::AlpmWrapper;
 pub use clone_aur::{CloneAur, CloneAurEffect};
 pub use command_utils::CommandUtils;
-pub use copyright_terms::COPYING;
+pub use copyright_terms::LICENSE;
 pub use create_makepkg_command::create_makepkg_command;
 pub use custom_makepkg::{MakepkgPatch, MAKEPKG_PATCHES};
 pub use db_init::{DbInit, DbInitValue};
